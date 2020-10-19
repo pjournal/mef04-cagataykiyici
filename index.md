@@ -17,10 +17,13 @@ My short term goal is to improve my performance in delivering data analytics rel
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 
-##Contact Info & Social Media
-**Email:** kiyicim@mef.edu.tr 
+## Contact Info & Social Media
+**Email:** kiyicim@mef.edu.tr
 **Linkedin:** [https://www.linkedin.com/in/cagataykiyici/](https://www.linkedin.com/in/cagataykiyici/)
 **Medium:** [https://medium.com/@cagataykiyici](https://www.linkedin.com/in/cagataykiyici/)
-**Quora:** https://www.quora.com/profile/Cagatay-Kiyici 
+**Quora:** [https://www.quora.com/profile/Cagatay-Kiyici](https://www.quora.com/profile/Cagatay-Kiyici)
 
-
+# My Favoritte R Content
+## This Weeks Video: 
+This video makes things look so easy and achievably. Bonus is the lovely Scottish accent.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ANMuuq502rE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
