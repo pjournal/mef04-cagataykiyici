@@ -12,17 +12,12 @@ I recently left agency side, and launched an independent CX consultancy, [Co-Par
 My strongest data skills comes from marketing research background and long time experience on digital analytics (Hey I'm one of the first beta users of Google Analytics!) and related performance / search engine marketing disciplines.  
 
 My short term goal is to improve my performance in delivering data analytics related projects to my clients. Data and analytics competency is the key component for measurement, decision making, optimization and personalization in CX management.
-
-
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-
 ## Contact Info & Social Media
--**Email:**[kiyicim@mef.edu.tr](mailto:kiyicim@mef.edu.tr)
--[Linkedin](https://www.linkedin.com/in/cagataykiyici/)
--[Medium](https://www.linkedin.com/in/cagataykiyici/)
--[Quora](https://www.quora.com/profile/Cagatay-Kiyici)
+- **Email:** [kiyicim@mef.edu.tr](mailto:kiyicim@mef.edu.tr)
+- [Linkedin](https://www.linkedin.com/in/cagataykiyici/)
+- [Medium](https://www.linkedin.com/in/cagataykiyici/)
+- [Quora](https://www.quora.com/profile/Cagatay-Kiyici)
+
 
 # My Favorite R Content
 ## This Week's Video: 
@@ -32,10 +27,19 @@ This video from the University of Edinburgh makes things look so smooth and achi
 ### Data Journalism with R
 Benedict Witzenberger from [Suddeuetche Zeitung](https://www.sueddeutsche.de/), one of the leading newspapers in Europe, made a very interesting presentation on data journalism. He is leading a team of 5 journalists with diverse backgrounds (physics, mathematics, social sciences and software development) to gather, analyze and visualize data to empower data journalism efforts. 
 They heavily use R, especialy tidyverse and some specialized libraries.
- * [quanteda/](https://quanteda.io/) for text mining in addition to Tidyverse standard libraries. Text mining is very useful for analyzing vast documents very quickly and create insights objectively as in political speeches or even literature analysis. It has a huge potential to deal with large and messy text document such as in leaked documents (i.e. Panama Papers).
+ * [quanteda](https://quanteda.io/) for text mining in addition to Tidyverse standard libraries. Text mining is very useful for analyzing vast documents very quickly and create insights objectively as in political speeches or even literature analysis. It has a huge potential to deal with large and messy text document such as in leaked documents (i.e. Panama Papers).
  * A data visualization service, [DataWrapper](https://www.datawrapper.de/why-datawrapper/) is used frequently to quickly create simple graphics for digital distribution. He has created an R library, [DataWrappr](https://blog.datawrapper.de/why-i-created-an-R-library-to-use-Datawrappers-API/) to streamline data import to the tool. 
  * Data scraping from web and public resources is an important chunk of their work. For example their automated code on their server running R libraries  crawls Covid related resources and update their database every 30 minutes. 
 
 You can review their [Github page](https://github.com/sueddeutsche) with 40 repositories. Their team can be a good resource who have practical experience on text mining, crawling, dealing with public data sets and data visualization.
 <iframe width="560" height="315" src="https://www.youtube.com/embed/1bmdHy5vtfY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+## This Week's Interesting Blog Posts 
+This week I browsed [Data Science Central](https://www.datasciencecentral.com/page/search?q=R) for interesting R related content. Besides tutorials and other data science content, here are my top 3 interesting R posts. 
 
+### [Easily Download Financial Data From Yahoo! Finance ](https://www.datasciencecentral.com/profiles/blogs/getting-historical-data-from-yahoo-finance-in-r)
+Simple way to download any financial data. This method can be applied in other data sources for easy web scraping. I'm sure with small additions we can automatize daily data updates and can download hundreds of different   symbols. 
+### [Is R Shiny Versatile Enough to Build a Video Game?](https://www.datasciencecentral.com/profiles/blogs/is-r-shiny-versatile-enough-to-build-a-video-game)
+I thought Shiny is just a dashboarding tool, an alternative to Power BI or Tableau. But Shiny is very flexible and can utilize and combine front end technologies (html, css, js) for an interactive application. 
+
+### [Johns Hopkins Covid-19 Data and R](https://st6.ning.com/topology/rest/1.0/file/get/4791290285?profile=original)
+This is 3 part series on describing how researchers at John Hopkins University handles Covid stats using R data.table package.  Great show case for hands on use of R.
