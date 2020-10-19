@@ -18,7 +18,7 @@ Markdown is a lightweight and easy-to-use syntax for styling your writing. It in
 
 
 ## Contact Info & Social Media
-**Email:** kiyicim@mef.edu.tr
+**Email:** [kiyicim@mef.edu.tr](kiyicim@mef.edu.tr)
 **Linkedin:** [https://www.linkedin.com/in/cagataykiyici/](https://www.linkedin.com/in/cagataykiyici/)
 **Medium:** [https://medium.com/@cagataykiyici](https://www.linkedin.com/in/cagataykiyici/)
 **Quora:** [https://www.quora.com/profile/Cagatay-Kiyici](https://www.quora.com/profile/Cagatay-Kiyici)
