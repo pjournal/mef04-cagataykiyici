@@ -2,6 +2,6 @@
 
 ## Assignment 1
 
-[RMarkdown Assignment](cagatay-assignment1.html)
+[RMarkdown Assignment](assignment1.html)
 
 
