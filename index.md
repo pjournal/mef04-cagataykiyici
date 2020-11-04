@@ -2,6 +2,6 @@
 
 ## Assignment 1
 
-[RMarkdown Assignment](assignment1.html)
+[RMarkdown Assignment](Assignment1.html)
 
 
