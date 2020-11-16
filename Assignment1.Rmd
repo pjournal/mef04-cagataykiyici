@@ -50,3 +50,6 @@ I thought Shiny is just a dashboarding tool, an alternative to Power BI or Table
 
 ### [Johns Hopkins Covid-19 Data and R](https://st6.ning.com/topology/rest/1.0/file/get/4791290285?profile=original)
 This is 3 part series on describing how researchers at John Hopkins University handles Covid stats using R data.table package.  Great show case for hands on use of R.
+
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vR5RraDyqXL1g6x7dxxk59Fp6pAfsKh3KdVzjNEfBvMhFa1u75dI0n8kMD_X5LohrTsTlRrqNdrv3pJ/pubhtml?gid=675334346&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
