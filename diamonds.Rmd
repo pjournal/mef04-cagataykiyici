@@ -1,0 +1,152 @@
+---
+title: "Diamonds Data Linear Regression Assignment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(writexl)
+library(caret)
+library(earth)
+```
+
+I analyzed diamonds data to predict price by linear regression.
+
+```{r}
+df=diamonds%>%glimpse()
+
+```
+
+
+```{r}
+df%>% group_by(cut)%>% summarise(count=n())%>%arrange(desc(count))
+
+```
+
+
+```{r}
+df%>% group_by(color)%>% summarise(count=n())%>%arrange(desc(count))
+
+```
+
+```{r}
+df%>% group_by(clarity)%>% summarise(count=n())%>%arrange(desc(count))
+
+```
+
+All combinations of cut, clarity and colour can be: 8 * 7 * 5=280
+In data, there 276 variations. This is worrying. Let's compare by pairs.
+```{r}
+df%>% group_by(color, cut, clarity)%>% summarise(count=n())%>%arrange(desc(count))
+
+
+```
+
+cut and color 35 vs 35
+```{r}
+df%>% group_by(color, cut)%>% summarise(count=n())%>%arrange(desc(count))
+
+
+```
+color and clarity 56 vs 56
+
+```{r}
+
+df%>% group_by(color, clarity)%>% summarise(count=n())%>%arrange(desc(count))
+
+```
+
+cut and clarity 40 vs 40. These 3 variables are extremely noisy. I will eliminate these variables from linear regression.
+```{r}
+df2=df%>% select(-cut,-color, -clarity)
+
+df2
+```
+
+
+
+Let's run multiple lineer regression
+```{r}
+
+lm.fit=lm(price~., data=df2)
+summary(lm.fit)
+```
+
+z has a high p value, let's remove it and run regression again. Std errors decreased, r sqr did not change.
+
+```{r}
+lm.fit=lm(price~.-z, data=df2)
+summary(lm.fit)
+
+```
+Let's remove y, despite low, still has the highes p. std error of X significantly decreased while r sqr did not change
+
+```{r}
+lm.fit=lm(price~.-z -y, data=df2)
+summary(lm.fit)
+```
+
+Now let's try with the most significant factor, carat. With this single variable we coult achieve very low p, similar r sqr by much lower std error plus the benefit of a simpler model.
+```{r}
+lm.fit=lm(price~carat, data=df2)
+summary(lm.fit)
+
+```
+
+In the next steps we can transform the price as price pert carat an repeat the analysis
+
+
+```{r}
+df3=df2%>%mutate(unit_price=price/carat)%>%select(-price, -carat)
+df3
+
+```
+
+this time R sqr was  a very bad .6373 while all p values are significant
+```{r}
+lm.fit=lm(unit_price~., data=df3)
+summary(lm.fit)
+
+```
+
+Let's drop y and z and try again. R squared did not change but std errors, especialy for X dropped significantly.
+```{r}
+lm.fit=lm(unit_price~.-y-z, data=df3)
+summary(lm.fit)
+
+```
+
+To improve performance transforming color, cut and clarity variables as dummy variables try to isolate their prediction performance. 
+```{r}
+
+
+```
+
+
+```{r}
+
+
+```
+
+
+```{r}
+
+
+```
+
+
+```{r}
+
+
+```
+
+
+```{r}
+
+
+```
+
+

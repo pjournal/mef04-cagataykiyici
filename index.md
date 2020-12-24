@@ -4,4 +4,4 @@
 
 [RMarkdown Assignment](Assignment1.html)
 
-
+[Machine Learning Assignment-Diamonds data](diamonds.html)
