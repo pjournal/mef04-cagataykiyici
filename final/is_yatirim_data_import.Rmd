@@ -1,0 +1,222 @@
+---
+title: "Is Yatirim Data Import & Wrangling"
+author: "Cagatay Kiyici"
+date: "09 01 2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(LANG = "en")
+library(tidyverse)
+library(lubridate)
+library(stringi)
+library(readxl)
+
+```
+
+##Part III: Wellcome to Real Life
+
+###import data
+
+All filed imported from https://www.isyatirim.com.tr/tr-tr/analiz/hisse/Sayfalar/takip-listesi.aspx page to /raw_data folder
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
+
+Summary table were imported for each sector. 
+
+```{r}
+
+df_files_summary=list.files(path = "./raw_data", pattern = "^1",full.names = TRUE)#summary file names start with "1"
+
+
+count=FALSE  
+for (i in df_files_summary) {
+
+  if(count==FALSE){
+    df_summary=read_xlsx(path = i) %>% 
+      mutate(Sector=str_sub(i,13,-6))
+    count=TRUE}
+  
+    else{
+      df_temp1=read_xlsx(path = i) %>% 
+        mutate(Sector=str_sub(i,13,-6))
+      df_summary=bind_rows(df_summary,df_temp1)
+  }
+
+}
+
+#Turkish texts translated to English
+df_summary=df_summary %>% rename(Stock=Kod,Recommendation=Öneri,Target_Price=`Hedef Fiyat (TL)`, Upside=`Getiri Potansiyeli (%)`, Rec_Date=`Öneri Tarihi`, Close=`Kapanış (TL)`, Market_Cap=`Piyasa Değeri (mn TL)`) %>%
+  mutate(Rec_Date=as.Date(dmy(Rec_Date)), 
+         Recommendation=case_when(Recommendation=="AL"~"Buy",
+                                  Recommendation=="SAT"~"Sell",
+                                  Recommendation=="TUT"~"Hold",
+                                  Recommendation=="Ö.Y."~"No_Recommendation")
+         
+         )
+
+
+```
+Estimate revision table were imported for each sector. Only "Net profit" estimates were imported, because it is shared in all sectors and most relevant & comparable metrics for stock performance.
+
+```{r}
+
+df_files_estimate_revisions=list.files(path = "./raw_data", pattern = "^2",full.names = TRUE) #Estimate revision  file names start with "2"
+
+
+count=FALSE  
+for (i in df_files_estimate_revisions) {
+
+  if(count==FALSE){
+    df_estimate_revisions=read_xlsx(path = i) %>% 
+      mutate(Sector=str_sub(i,13,-6))
+    count=TRUE}
+  
+    else{
+      df_temp2=read_xlsx(path = i) %>% 
+        mutate(Sector=str_sub(i,13,-6))
+      df_estimate_revisions=bind_rows(df_estimate_revisions,df_temp2)
+  }
+
+}
+#Turkish texts translated to English
+  df_estimate_revisions =
+  df_estimate_revisions%>% 
+  rename(Stock=Kod, Recommendation=Öneri, Target_Price=`Hedef Fiyat(TL)`, Upside=`GetiriPotansiyeli(%)`, Rec_Date=`Öneri Tarihi`,Current_Estimate_Netprofit=`Cari Tahmin(mn TL)`,Estimate_Date=TahminGüncellemeTarihi, Netprofit_Change_Lastweek=`1 Hafta(mn TL)`, Netprofit_Change_Lastmonth=`1 Ay(mn TL)`  , Netprofit_Change_Lastquarter=`3 Ay(mn TL)`) %>%
+  mutate(Rec_Date=as.Date(dmy(Rec_Date)), 
+         Estimate_Date=as.Date(dmy(Estimate_Date)),
+         Recommendation=case_when(Recommendation=="AL"~"Buy",
+                                  Recommendation=="SAT"~"Sell",
+                                  Recommendation=="TUT"~"Hold",
+                                  Recommendation=="Ö.Y."~"No_Recommendation")
+         )
+
+```
+
+Target revisions table were imported for each sector. 
+
+```{r}
+
+df_files_target_revisions=list.files(path = "./raw_data", pattern = "^3",full.names = TRUE)#Target revision file names start with "3"
+
+count=FALSE  
+
+for (i in df_files_target_revisions) {
+ 
+  if(count==FALSE){
+    df_target_revisions=read_xlsx(path = i) %>%
+      mutate(Sector=str_sub(i,13,-6))
+    count=TRUE
+    }
+
+    else{
+      df_temp3=read_xlsx(path = i) %>%
+        mutate(Sector=str_sub(i,13,-6))
+      df_target_revisions=bind_rows(df_target_revisions,df_temp3)
+      }
+
+}
+#Turkish texts translated to English
+df_target_revisions =
+  df_target_revisions%>% 
+  rename(Stock=Kod, Recommendation=Öneri...2, Target_Price=`HedefFiyat(TL)...3`, Upside="GetiriPotansiyeli(%)", Rec_Date=`ÖneriTarihi`,Recommendation_Lastweek="Öneri...6", Target_Price_Lastweek=`HedefFiyat(TL)...7`,Target_Price_Change_Lastweek="HedefFiyatDeğ....8",Recommendation_Lastmonth="Öneri...9", Target_Price_Lastmonth=`HedefFiyat(TL)...10`,Target_Price_Change_Lastmonth="HedefFiyatDeğ....11",Recommendation_Lastquarter="Öneri...12", Target_Price_Lastquarter=`HedefFiyat(TL)...13`,Target_Price_Change_Lastquarter="HedefFiyatDeğ....14") %>%
+  mutate(Rec_Date=as.Date(dmy(Rec_Date)), 
+         Recommendation=case_when(Recommendation=="AL"~"Buy",
+                                  Recommendation=="SAT"~"Sell",
+                                  Recommendation=="TUT"~"Hold",
+                                  Recommendation=="Ö.Y."~"No_Recommendation"),
+         Recommendation_Lastweek=case_when(Recommendation_Lastweek=="AL"~"Buy",
+                                  Recommendation_Lastweek=="SAT"~"Sell",
+                                  Recommendation_Lastweek=="TUT"~"Hold",
+                                  Recommendation_Lastweek=="Ö.Y."~"No_Recommendation"),
+         Recommendation_Lastmonth=case_when(Recommendation_Lastmonth=="AL"~"Buy",
+                                  Recommendation_Lastmonth=="SAT"~"Sell",
+                                  Recommendation_Lastmonth=="TUT"~"Hold",
+                                  Recommendation_Lastmonth=="Ö.Y."~"No_Recommendation"),
+         Recommendation_Lastquarter=case_when(Recommendation_Lastquarter=="AL"~"Buy",
+                                  Recommendation_Lastquarter=="SAT"~"Sell",
+                                  Recommendation_Lastquarter=="TUT"~"Hold",
+                                  Recommendation_Lastquarter=="Ö.Y."~"No_Recommendation")         
+         )  
+  
+df_target_revisions %>% glimpse()
+```
+
+
+Now we have combined data from 3 tables in 3 data frames:
+df_summary
+df_target_revisions
+df_estimate_revisions
+
+###Basic Controls and Transformations before Exploratory Data Analysis
+
+Let's remove stocks with irrelevant or missing recommendation field which is the core of this data set
+```{r}
+df_summary=df_summary %>% filter(!(is.na(Recommendation)==TRUE|Recommendation=="No_Recommendation"))
+df_estimate_revisions=df_estimate_revisions %>% filter(!(is.na(Recommendation)==TRUE|Recommendation=="No_Recommendation"))
+df_target_revisions=df_target_revisions %>% filter(!(is.na(Recommendation)==TRUE|Recommendation=="No_Recommendation"))
+```
+
+
+Some columns are common in all 3 data frames, R have marked them by adding .x and .y at the end of the column names. 
+```{r}
+
+df_combined=df_summary %>% left_join(df_target_revisions,by="Stock") %>% left_join(df_estimate_revisions, by="Stock") %>% glimpse()
+
+```
+
+Let's make sure all these data is matching. Data in thse columsn are matching. So we will get rid of it and simplify our data set. 
+```{r}
+df_combined%>% 
+  mutate(Recommendation_check=ifelse((Recommendation==Recommendation.x & Recommendation==Recommendation.y), 0,1 ))%>% 
+  mutate(Target_Price_check=if_else((Target_Price==Target_Price.x & Target_Price==Target_Price.y), 0, 1 )) %>%
+  mutate(Upside_check=if_else((Upside==Upside.x & Upside==Upside.y), 0,1)) %>%
+  mutate(Rec_Date_check=if_else((Rec_Date==Rec_Date.x & Rec_Date==Rec_Date.y), 0,1 ))%>%summarise(sum(Target_Price_check)+sum(Recommendation_check)+sum(Upside_check)+sum(Rec_Date_check))
+
+```
+Drop the columsn endigin with .x or .y
+```{r}
+df_combined=
+  df_combined %>% select(-matches("\\.(x|y)$")) %>% glimpse()
+
+```
+
+Let's check NA and non NA values in other fields. It seems all values of Target_Price_Lastweek and Target_Price_change_Lastweek are NA. Good news is there are no other NA values in our data set
+
+```{r}
+colSums(is.na(df_combined))
+
+
+```
+
+Remove Target_Price_Lastweek and Target_Price_change_Lastweek columns to simplify our data set and change the order of columns for usability
+
+```{r}
+ df_combined =  df_combined %>% 
+  select(-Target_Price_Lastweek, -Target_Price_Change_Lastweek) %>% 
+  relocate(Sector, Stock,Close, Market_Cap,Rec_Date, Recommendation, Target_Price, Upside, Recommendation_Lastweek,Recommendation_Lastmonth, Target_Price_Lastmonth, Target_Price_Change_Lastmonth, Recommendation_Lastquarter, Target_Price_Lastquarter, Target_Price_Change_Lastquarter, Estimate_Date) %>% 
+  arrange(Sector,Stock) %>% 
+  glimpse()
+
+```
+Last check whether stock names are unique. Great, all stock names are unique.
+
+```{r}
+df_combined %>% group_by(Stock) %>% summarise(count=n()) %>% arrange(desc(count)) %>% filter(count!=1)
+
+```
+
+Now data set df_combines is ready for analysis. Let's export it as RDS
+
+```{r}
+df_combined %>% write_rds("df_clean.rds")
+
+```
+

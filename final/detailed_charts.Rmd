@@ -1,0 +1,251 @@
+---
+title: "Cagatay-Kiyici-503-Detailed Analysis"
+author: "Cagatay Kiyici"
+date: "09 01 2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(LANG = "en")
+library(tidyverse)
+library(lubridate)
+library(stringi)
+library(readxl)
+library(ggrepel)
+#library(qwraps2)
+#library(writexl)
+# library(matsindf)
+# library(TTR)
+library(zoo)
+library(tsibble)
+# library(xts)
+# library(quantmod)
+# library(tidyquant)
+# library(data.table)
+# library(timeDate)
+# library(bizdays)
+#library(swfscMisc)
+
+
+```
+
+
+#Detailed charts and analysis for Is Yatirim Data
+
+
+```{r}
+df=readRDS("df_clean.rds")
+
+```
+
+
+Recommended companies by sector
+```{r}
+df$Sector=fct_infreq(df$Sector)
+df %>% 
+  ggplot() +
+ aes(x = Sector) +
+ geom_bar() +
+  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5, colour = "white")+
+ scale_fill_hue() +
+ # labs(y = "# Companies", title = "title", subtitle = "subtitle", caption = "caption", fill = "fill label") +
+ theme_minimal() +
+ theme(legend.position = "bottom")
+
+```
+
+Recommended companies by recommendation type
+```{r}
+
+df %>% 
+  ggplot() +
+ aes(x = Recommendation, fill=Recommendation) +
+ geom_bar() +
+  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5)+
+ scale_fill_hue() +
+ labs(y = "# Companies", title = "title", subtitle = "subtitle", caption = "caption", fill = "fill label") +
+ theme_minimal() +
+ scale_fill_manual(values=c( "green", "blue", "red"))+
+ theme(legend.position = "bottom")
+
+```
+
+
+Recommended companies by industry and recommendation type
+```{r}
+df$Sector=fct_infreq(df$Sector)
+df$Recommendation=fct_infreq(df$Recommendation)
+
+
+df %>% 
+  ggplot() +
+ geom_bar() +
+  aes(x = Sector, fill = Recommendation)+
+ scale_fill_hue() +
+ geom_text(aes(x = Sector, fill=Recommendation, label = ..count..),stat = "count", position=position_stack(vjust =0.9),check_overlap = TRUE)+
+ labs(y = "# Companies", title = "title", subtitle = "subtitle", caption = "caption", fill = "fill label") +
+ theme_minimal() +
+scale_fill_manual(values=c("green", "blue", "red"))+
+
+ theme(legend.position = "bottom")
+
+```
+
+
+
+market cap distribution histogram 
+```{r}
+
+ggplot(df) +
+ aes(x = Market_Cap) +
+ geom_histogram(bins = 10L, fill = "#0c4c8a") +
+ labs(x = "asda", y = "asda", title = "asd", subtitle = "asd", caption = "ads") +
+ theme_minimal() 
+ 
+
+
+```
+
+
+market cap distribution histogram by sectors
+```{r}
+
+ggplot(df) +
+ aes(x = Market_Cap) +
+ geom_histogram(bins = 5L, fill = "#0c4c8a") +
+ labs(x = "asda", y = "asda", title = "asd", subtitle = "asd", caption = "ads") +
+ theme_minimal() +
+ facet_grid(vars(Sector), vars())
+
+
+```
+
+
+market cap distribution histogram by recommendation
+```{r}
+
+ggplot(df) +
+ aes(x = Market_Cap) +
+ geom_histogram(bins = 5L, fill = "#0c4c8a") +
+ labs(x = "asda", y = "asda", title = "asd", subtitle = "asd", caption = "ads") +
+ theme_minimal() +
+ facet_grid(vars(Recommendation), vars())
+
+
+```
+
+
+
+market cap distribution histogram by sector and recommendation
+```{r}
+
+ggplot(df) +
+ aes(x = Market_Cap) +
+ geom_histogram(bins = 5L, fill = "#0c4c8a") +
+ labs(x = "asda", y = "asda", title = "asd", subtitle = "asd", caption = "ads") +
+ theme_minimal() +
+ facet_grid(vars(Sector), vars(Recommendation))
+
+
+```
+
+Market cap distribution by industry recommendation
+
+```{r}
+ggplot(df) +
+ aes(x = Sector, y = Market_Cap) +
+ geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.75  ,fill=NA , aes(colour=Recommendation)) +
+geom_boxplot(outlier.shape = NA)+
+ # labs(x = "sfsfs", y = "sdfsdfsd", title = "sfsdf", subtitle = "sfdsdfs", caption = "sfsfsdf") +  
+  scale_colour_manual(values=c("green", "blue", "red"))+
+    theme_minimal()+
+  theme(legend.position = "bottom")
+
+
+
+```
+
+Recommendation dates: pretty similar date. Only 1 recommendation was added on December. All others were update on 26th of November 2020.
+```{r}
+df %>% group_by(Rec_Date) %>% summarise(count=n()) %>% arrange(desc(count))
+
+```
+
+
+
+
+
+Let's calculate change in quarterly target price change % and net profit estimation change % for a better comparison
+```{r}
+df=df %>% mutate(Target_Price_Change_Lastquarter_percent=round(Target_Price_Change_Lastquarter/(Target_Price-Target_Price_Change_Lastquarter)*100,0),Netprofit_Estimate_Change_Lastquarter_percent=round(Netprofit_Change_Lastquarter/abs((Current_Estimate_Netprofit-Netprofit_Change_Lastquarter))*100,0))
+
+```
+
+Upside potential vs target price change % (by market cap)
+
+```{r}
+
+
+
+ggplot(df) +
+ aes(x = Target_Price_Change_Lastquarter_percent , y = Upside, colour = Recommendation, size = Market_Cap) +
+ geom_point() +
+ scale_color_hue() +
+ # labs(x = "asdasd", y = "asdasd", title = "adssad", subtitle = "asdasd", caption = "asdasd", color = "asdasd", size = "asdsada") +
+ theme_minimal() +
+  scale_colour_manual(values=c("green", "blue", "red"))+
+ theme(legend.position = "bottom")
+
+```
+
+
+```{r}
+
+
+
+ggplot(df) +
+ aes(x = Target_Price_Change_Lastquarter_percent , y = Upside, colour = Sector) +
+ geom_point() +
+  geom_text_repel(aes(label = Stock), size = 2)+
+ scale_color_hue() +
+ # labs(x = "asdasd", y = "asdasd", title = "adssad", subtitle = "asdasd", caption = "asdasd", color = "asdasd", size = "asdsada") +
+ theme_minimal() +
+ theme(legend.position = "bottom")
+
+```
+
+
+```{r}
+
+
+
+ggplot(df) +
+ aes(x = Market_Cap , y = Upside, colour = Recommendation) +
+ geom_point() +
+  # geom_text_repel(aes(label = Stock), size = 2)+
+ scale_color_hue() +
+ # labs(x = "asdasd", y = "asdasd", title = "adssad", subtitle = "asdasd", caption = "asdasd", color = "asdasd", size = "asdsada") +
+  scale_colour_manual(values=c("green", "blue", "red"))+
+ theme_minimal() +
+ theme(legend.position = "bottom")
+
+```
+
+
+
+```{r}
+
+ggplot(df) +
+ aes(y = Target_Price_Change_Lastquarter_percent , x = Netprofit_Estimate_Change_Lastquarter_percent , colour = Recommendation) +
+ geom_point() +
+  geom_text_repel(aes(label = Stock), size = 2)+
+ scale_color_hue() +
+ # labs(x = "asdasd", y = "asdasd", title = "adssad", subtitle = "asdasd", caption = "asdasd", color = "asdasd", size = "asdsada") +
+  # scale_y_continuous(trans = 'log2')+
+  scale_colour_manual(values=c("green", "blue", "red"))+
+ theme_minimal() +
+ theme(legend.position = "bottom")
+```
